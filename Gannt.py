@@ -9,24 +9,33 @@ from dateutil.rrule import rrule, WEEKLY, MONTHLY, FR
 # Set wide mode and page title
 st.set_page_config(layout="wide", page_title="Advanced Project Management Tool")
 
-# User Authentication (simplified example)
-if 'logged_in' not in st.session_state:
-    st.session_state.logged_in = False
+# Add "Made By Ashwin Nair" on top of the sidebar
+st.sidebar.markdown("### **Made By Ashwin Nair**")
 
-def login():
-    users = {"admin": "password", "user": "password"}
-    user = st.sidebar.text_input("Username")
-    password = st.sidebar.text_input("Password", type="password")
-    if st.sidebar.button("Login"):
-        if user in users and users[user] == password:
-            st.session_state.logged_in = True
-            st.session_state.user = user
-        else:
-            st.sidebar.error("Invalid credentials")
+# User Guide at the top of the sidebar
+with st.sidebar.expander("User Guide", expanded=True):
+    st.write("### User Guide")
+    st.write("""
+    **Task Management:**
+    - Use the sidebar to manage tasks and subtasks.
+    - You can add new subtasks under an existing task or create recurring tasks.
 
-if not st.session_state.logged_in:
-    login()
-    st.stop()
+    **File Upload:**
+    - Upload your project data using the file uploader.
+    - Supported formats: CSV, Excel.
+
+    **Project Visualizations:**
+    - Explore the Gantt chart for task dependencies.
+    - Use the Burn-Down chart to track progress over time.
+    - Check resource allocation with the Resource Load Balancing chart.
+
+    **Data Editing:**
+    - Edit project details directly within the table.
+    - Your changes will be saved automatically.
+
+    **Export:**
+    - You can download the current project data as a CSV file for backup or further analysis.
+    """)
 
 # Function to load data from file and ensure date formatting
 def load_data(uploaded_file):
@@ -214,10 +223,9 @@ def create_resource_load_chart(df):
 def show_onboarding():
     st.write("### Welcome to the Project Management App!")
     st.write("This tutorial will guide you through the key features.")
-    st.write("1. **Login**: Use your credentials to log in.")
-    st.write("2. **Upload Data**: Upload a CSV or Excel file with your project tasks.")
-    st.write("3. **Manage Tasks**: Use the sidebar to add, update, or delete tasks.")
-    st.write("4. **Visualizations**: Explore various charts and dashboards for insights.")
+    st.write("1. **Upload Data**: Upload a CSV or Excel file with your project tasks.")
+    st.write("2. **Manage Tasks**: Use the sidebar to add, update, or delete tasks.")
+    st.write("3. **Visualizations**: Explore various charts and dashboards for insights.")
     # ... Add more steps as necessary
 
 # Initialize onboarding_complete in session state
@@ -348,12 +356,13 @@ if show_kanban:
 if show_calendar:
     st.plotly_chart(fig_calendar)  # Calendar View
 
-# Export Data
+# Export Data Options
 with st.sidebar.expander("Export Options", expanded=True):
-    if st.button("Export to CSV"):
-        st.session_state.df.to_csv("exported_project.csv", index=False)
-        st.success("Project exported to 'exported_project.csv'")
+    if st.button("Download Current View as CSV"):
+        st.session_state.df.to_csv("current_project_view.csv", index=False)
+        st.success("Current data view downloaded as 'current_project_view.csv'")
 
-# Predictive Analytics (Placeholder)
-st.sidebar.subheader("Predictive Analytics")
-st.write("Integrating AI-based predictive analytics requires additional libraries and tools.")
+    if st.button("Download Data Template as CSV"):
+        template_df = st.session_state.df.copy()
+        template_df.to_csv("project_template.csv", index=False)
+        st.success("Template downloaded as 'project_template.csv'")

@@ -12,7 +12,7 @@ st.set_page_config(layout="wide", page_title="Advanced Project Management Tool")
 st.sidebar.markdown("### **Made By Ashwin Nair**")
 
 # User Guide at the top of the sidebar
-with st.sidebar.expander("User Guide", expanded=True):
+with st.sidebar.expander("User Guide", expanded=False):  # Set expanded=False
     st.write("### User Guide")
     st.write("""
     **Task Management:**
@@ -190,7 +190,6 @@ def add_recurring_task_advanced(task_name, recurrence_type, start_date, end_date
             "Status": "Not Started",
             "Progress": 0,
         }, ignore_index=True)
-    st.experimental_rerun()
 
 # Task Prioritization Matrix (Eisenhower Matrix)
 def create_prioritization_matrix(df):
@@ -265,7 +264,6 @@ if not st.session_state.onboarding_complete:
     show_onboarding()
     if st.button("Finish Onboarding"):
         st.session_state.onboarding_complete = True
-        st.experimental_rerun()
 
 if st.session_state.onboarding_complete:
     st.sidebar.success("Onboarding Complete!")
@@ -305,7 +303,6 @@ with st.sidebar.expander("Task Management", expanded=True):
                 "End Date": None
             }, ignore_index=True)
             st.success(f"Subtask '{subtask_name}' added under '{task_name}'")
-            st.experimental_rerun()
 
     # Advanced Recurring Task Management
     recurrence_options = ["Weekly on Monday", "Last Friday of the Month"]

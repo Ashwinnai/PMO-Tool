@@ -222,11 +222,24 @@ def create_resource_load_chart(df):
 # Interactive Onboarding
 def show_onboarding():
     st.write("### Welcome to the Project Management App!")
-    st.write("This tutorial will guide you through the key features.")
-    st.write("1. **Upload Data**: Upload a CSV or Excel file with your project tasks.")
-    st.write("2. **Manage Tasks**: Use the sidebar to add, update, or delete tasks.")
-    st.write("3. **Visualizations**: Explore various charts and dashboards for insights.")
-    # ... Add more steps as necessary
+    st.write("""
+    This tutorial will guide you through the key features.
+
+    - **Upload Data**: Upload a CSV or Excel file with your project tasks using the sidebar. This allows you to work with your own data within the app.
+
+    - **Manage Tasks**: Use the "Task Management" section in the sidebar to add, update, or delete tasks and subtasks. You can also create recurring tasks to automate task creation.
+
+    - **Visualizations**: Explore various charts and dashboards available in the main view:
+      - **Gantt Chart**: Visualize task timelines and dependencies.
+      - **Burn-Down Chart**: Track the cumulative progress over time.
+      - **Resource Load Balancing**: Check how tasks are distributed among team members.
+      - **Kanban Board View**: See tasks categorized by status (To Do, In Progress, Done).
+      - **Calendar View**: Get a timeline overview of tasks.
+
+    - **Data Editing**: Directly edit your project data within the table, and your changes will be saved automatically.
+
+    - **Export Options**: Download your current project data or a template CSV file for backup or further analysis using the export options in the sidebar.
+    """)
 
 # Initialize onboarding_complete in session state
 if 'onboarding_complete' not in st.session_state:

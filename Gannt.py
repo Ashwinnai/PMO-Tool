@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
-import plotly.graph_objects as go
 from datetime import datetime, timedelta
 from dateutil.rrule import rrule, WEEKLY, MONTHLY, FR
 
@@ -170,6 +169,7 @@ def create_gantt_chart_with_dependencies(df):
                         y1=i,
                         line=dict(color="red", width=2, dash="dot")
                     )
+    
     fig.update_layout(showlegend=True, title="Gantt Chart with Dependencies")
     return fig
 
@@ -181,10 +181,12 @@ def add_recurring_task_advanced(task_name, recurrence_type, start_date, end_date
         rule = rrule(freq=MONTHLY, byweekday=FR(-1), dtstart=start_date, until=end_date)
     
     for dt in rule:
+        # Properly handle datetime when adding timedelta
+        end_date = dt + timedelta(days=1)
         st.session_state.df = st.session_state.df.append({
             "Task": task_name,
             "Start Date": dt,
-            "End Date": dt + timedelta(days=1),
+            "End Date": end_date,  
             "Status": "Not Started",
             "Progress": 0,
         }, ignore_index=True)
@@ -218,6 +220,20 @@ def create_resource_load_chart(df):
     load_df = df.groupby('Assignee').agg({'Time Spent': 'sum', 'Task': 'count'}).reset_index()
     fig = px.bar(load_df, x='Assignee', y='Time Spent', title='Resource Load Balancing', color='Task')
     return fig
+
+# Check if the project is delayed
+def check_project_delay(df):
+    today_pd = pd.to_datetime(datetime.now()).normalize()
+
+    # Convert 'End Date' to pandas datetime format and normalize both dates
+    df['End Date'] = pd.to_datetime(df['End Date']).dt.normalize()
+
+    delayed_tasks = df[df['End Date'] < today_pd]
+    if not delayed_tasks.empty:
+        st.warning("Warning: The following tasks are delayed:")
+        st.dataframe(delayed_tasks[['Task', 'Subtask', 'End Date', 'Assignee']])
+    else:
+        st.success("All tasks are on schedule!")
 
 # Interactive Onboarding
 def show_onboarding():
@@ -352,6 +368,9 @@ with col6:
 
 # Project Health Dashboard
 create_project_health_dashboard(st.session_state.df)
+
+# Check if the project is delayed
+check_project_delay(st.session_state.df)
 
 # Finalizing the layout
 st.sidebar.subheader("Layout Customization")

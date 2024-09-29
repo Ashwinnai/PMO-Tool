@@ -8,8 +8,31 @@ from dateutil.rrule import rrule, WEEKLY, MONTHLY, FR
 # Set wide mode and page title
 st.set_page_config(layout="wide", page_title="Advanced Project Management Tool")
 
-# Add "Made By Ashwin Nair" on top of the sidebar
-st.sidebar.markdown("### **Made By Ashwin Nair**")
+# Styling improvements for sidebar and UI
+st.markdown("""
+    <style>
+        .sidebar-content {
+            background-color: #f0f2f6;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .main-content {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .stButton>button {
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            border: none;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+# Add "Made By Ashwin Nair" on top of the sidebar with styling
+st.sidebar.markdown("<h2 style='color: #4CAF50;'>**Made By Ashwin Nair**</h2>", unsafe_allow_html=True)
 
 # User Guide at the top of the sidebar
 with st.sidebar.expander("User Guide", expanded=False):  # Set expanded=False
@@ -395,3 +418,9 @@ with st.sidebar.expander("Export Options", expanded=True):
         template_df = st.session_state.df.copy()
         template_df.to_csv("project_template.csv", index=False)
         st.success("Template downloaded as 'project_template.csv'")
+# Footer
+st.markdown("""
+    <div style="position: fixed; bottom: 0; width: 100%; text-align: center; padding: 10px; background-color: #00000;">
+        <p>|Developed with ❤️ by Ashwin Nair | 
+    </div>
+    """, unsafe_allow_html=True)
